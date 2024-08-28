@@ -7,7 +7,7 @@ import { CommonModule } from "@angular/common";
 import { ChamadosComponent } from "./chamados.component";
 import { chamadosRouter } from "./chamados.routing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { ConfirmationService } from "primeng/api";
+import { ConfirmationService, MessageService } from "primeng/api";
 
 @NgModule({
   declarations: [
@@ -21,6 +21,6 @@ import { ConfirmationService } from "primeng/api";
     PrimengModule,
     SharedModule
   ],
-  providers: [ConfirmationService],
+  providers: [ConfirmationService, MessageService],
 })
 export class ChamadosModule { }
