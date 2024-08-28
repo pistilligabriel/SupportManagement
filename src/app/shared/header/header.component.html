@@ -1,17 +1,25 @@
-<div class="flex min-h-12 w-screen bg-slate-800 font-roboto text-lg justify-between items-center text-white shadow-lg shadow-slate-600">
+<div
+  class="flex min-h-12 w-screen bg-slate-800 font-roboto text-lg justify-between items-center text-white shadow-lg shadow-slate-600"
+>
   <div class="ml-5 text-xl">
     <a href="">Support Management</a>
   </div>
-  <div class="flex mr-14 text-sm gap-20">
-    <button>Home</button>
-    <button>Kanban</button>
-    <button>Tickets</button>
-    <button>Chat</button>
+  <div class="flex mr-12 text-sm gap-20">
+    <button routerLink="/home">Home</button>
+    <button routerLink="/kanban">Kanban</button >
+    <button routerLink="/chamados">Tickets</button >
+    <button>Chat</button >
   </div>
-  <div class="ml-5">
-    i
-    <button class="bg-blue-500 hover:bg-blue-700 text-white font-semibold  px-3 mr-6 rounded">
-      Logout
-    </button>
+  <div class="mr-5 card flex items-center gap-8">
+    <button><i class="pi pi-bell mt-2 text-lg" pBadge value="2"></i></button>
+    <p-menu #menu [popup]="true" [model]="items" />
+    <p-button (onClick)="menu.toggle($event)">
+      <p-avatar
+      icon="pi pi-user"
+      styleClass="mr-2"
+      [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"
+      shape="circle"
+      />
+    </p-button>
   </div>
 </div>
