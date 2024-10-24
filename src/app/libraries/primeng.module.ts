@@ -12,6 +12,7 @@ import { TableModule } from 'primeng/table';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MultiSelectModule } from 'primeng/multiselect';
 import {  TagModule } from 'primeng/tag';
+import { ToolbarModule } from 'primeng/toolbar';
 
 @NgModule({
   declarations: [],
@@ -28,7 +29,8 @@ import {  TagModule } from 'primeng/tag';
     TableModule,
     CheckboxModule,
     MultiSelectModule,
-    TagModule
+    TagModule,
+    ToolbarModule,
   ],
   exports: [
     BadgeModule,
@@ -43,7 +45,8 @@ import {  TagModule } from 'primeng/tag';
     TableModule,
     CheckboxModule,
     MultiSelectModule,
-    TagModule
+    TagModule,
+    ToolbarModule,
     ],
 
 })

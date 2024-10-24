@@ -1,0 +1,37 @@
+.links{
+    display:inline-flex ;
+    justify-content:center; 
+    align-items:center; 
+    background-color: transparent;
+    /* color: white;  */
+    height:3rem; 
+    width:3rem; 
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.links:hover{
+    background-color: white;
+    opacity: 10; 
+    transition:all; 
+    transition-duration:200;
+}
+
+.links-container{
+    display: flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:3px;
+}
+
+
+.account-container{
+    display:flex;
+    align-items:center;
+    gap:2px;
+}
+
+.account-container span{
+    font-weight:bold;
+    color:#6699CC
+}

@@ -1,25 +1,29 @@
-<div
-  class="flex min-h-12 w-screen bg-slate-800 font-roboto text-lg justify-between items-center text-white shadow-lg shadow-slate-600"
->
-  <div class="ml-5 text-xl">
-    <a href="">Support Management</a>
-  </div>
-  <div class="flex mr-12 text-sm gap-20">
-    <button routerLink="/home">Home</button>
-    <button routerLink="/kanban">Kanban</button >
-    <button routerLink="/chamados">Tickets</button >
-    <button>Chat</button >
-  </div>
-  <div class="mr-5 card flex items-center gap-8">
-    <button><i class="pi pi-bell mt-2 text-lg" pBadge value="2"></i></button>
-    <p-menu #menu [popup]="true" [model]="items" />
-    <p-button (onClick)="menu.toggle($event)">
-      <p-avatar
-      icon="pi pi-user"
-      styleClass="mr-2"
-      [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"
-      shape="circle"
-      />
-    </p-button>
-  </div>
-</div>
+<p-toolbar 
+    styleClass="bg-gray-900 shadow-2" 
+    [style]="{ 'border-radius': '3rem', 'background-image': 'linear-gradient(to right, var(--bluegray-500), var(--bluegray-800))' }">
+        <div class="links-container">
+            <img src="https://primefaces.org/cdn/primeng/images/primeng.svg" />
+            <h2>Teste</h2>
+        </div>
+            <div class="links-container">
+                <button class="links">
+                    <i class="pi pi-home text-2xl"></i>
+                </button>
+                <button class="links">
+                    <i class="pi pi-user text-2xl"></i>
+                </button>
+                <button class="links">
+                    <i class="pi pi-search text-2xl"></i>
+                </button>
+            </div>
+        <div >
+            <div class="account-container">
+                <p-avatar 
+                    image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" 
+                    shape="circle" />
+                <span>
+                    Amy Elsner
+                </span>
+            </div>
+        </div>
+</p-toolbar>
