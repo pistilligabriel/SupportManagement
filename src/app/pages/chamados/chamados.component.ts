@@ -10,6 +10,8 @@ import { format } from 'date-fns';
 import { Status } from '../../model/enums/Status.enum';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ChamadoService } from '../../services/chamado/chamado.service';
+import { Acao } from '../../model/interfaces/Acao';
+import { Modulo } from '../../model/interfaces/Modulo';
 
 @Component({
   selector: 'app-chamados',
@@ -22,6 +24,14 @@ export class ChamadosComponent implements OnInit, OnDestroy {
   @ViewChild('tabelaChamados') tabelaChamados: Table | undefined;
 
   showForm = false;
+
+  acao!: Acao[];
+
+  acaoSelecionada!: Acao;
+
+  modulo!: Modulo[];
+
+  moduloSelecionado!: Modulo;
 
   chamadoData!: Chamado[];
 
@@ -173,7 +183,7 @@ export class ChamadosComponent implements OnInit, OnDestroy {
     }
   }
 
-  adicionarOuEditarProduto(): void {
+  adicionarOuEditarChamado(): void {
     if (this.isEdicao()) {
       this.editarChamado();
     }else{
