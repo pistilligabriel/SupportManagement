@@ -11,6 +11,7 @@ import { PrimengModule } from './libraries/primeng.module';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { Router, RouterModule } from '@angular/router';
   ],
   imports: [
     CommonModule,
+    HttpClientModule,
     BrowserModule,
     AppRoutingModule,
     FontAwesomeModule,

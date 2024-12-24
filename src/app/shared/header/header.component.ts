@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
+import { HeaderService } from './header.service';
 
 
 @Component({
@@ -8,23 +9,15 @@ import { MenuItem } from 'primeng/api';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  items: MenuItem[] | undefined;
+  items!: MenuItem[];
 
-  ngOnInit() {
-    this.items = [
-        {
-          label:'Configuração',
-          icon:'pi pi-fw pi-cog',
-        },
-        {
-          separator:true
-        },
-        {
-          label: 'Sair',
-          icon: 'pi pi-fw pi-sign-out'
-        }
-    ];
-}
+  @ViewChild('menubutton') menuButton!: ElementRef;
+
+  @ViewChild('topbarmenubutton') topbarMenuButton!: ElementRef;
+
+  @ViewChild('topbarmenu') menu!: ElementRef;
+
+  constructor(public headerService: HeaderService) { }
 
 
 }

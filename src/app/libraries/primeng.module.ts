@@ -15,6 +15,10 @@ import {  TagModule } from 'primeng/tag';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TabViewModule } from 'primeng/tabview';
 import { DropdownModule } from 'primeng/dropdown';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
   declarations: [],
@@ -34,7 +38,11 @@ import { DropdownModule } from 'primeng/dropdown';
     TagModule,
     ToolbarModule,
     TabViewModule,
-    DropdownModule
+    DropdownModule,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
+    InputTextareaModule,
   ],
   exports: [
     BadgeModule,
@@ -52,8 +60,11 @@ import { DropdownModule } from 'primeng/dropdown';
     TagModule,
     ToolbarModule,
     TabViewModule,
-    DropdownModule
+    DropdownModule,
+    IconFieldModule,
+    InputIconModule,
+    InputTextModule,
+    InputTextareaModule,
     ],
-
 })
 export class PrimengModule { }

@@ -12,18 +12,20 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ChamadoService } from '../../services/chamado/chamado.service';
 import { Acao } from '../../model/interfaces/Acao';
 import { Modulo } from '../../model/interfaces/Modulo';
+import { CriarChamado } from '../../model/interfaces/CriarChamado';
+import { Prioridade } from '../../model/enums/Prioridade.enum';
 
 @Component({
   selector: 'app-chamados',
   templateUrl: './chamados.component.html',
-  styleUrls: [],
+  styleUrls: ['./chamados.component.css'],
 })
 export class ChamadosComponent implements OnInit, OnDestroy {
 
   private readonly destroy$: Subject<void> = new Subject<void>();
   @ViewChild('tabelaChamados') tabelaChamados: Table | undefined;
 
-  showForm = false;
+  public showForm = false;
 
   acao!: Acao[];
 
@@ -51,7 +53,7 @@ export class ChamadosComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    //this.listarChamados();
+    this.listarChamados();
     this.cols = [
       { field: 'codigo', header: 'Código' },
       { field: 'titulo', header: 'Título' },
@@ -67,8 +69,14 @@ export class ChamadosComponent implements OnInit, OnDestroy {
 
   public chamadoForms = this.formBuilder.group({
     codigo: [null as bigint | null],
+    cliente:[ '', [Validators.required]],
     titulo: ['', [Validators.required]],
     descricao: ['', [Validators.required]],
+    solicitante:[ '', [Validators.required]],
+    proprietario: [ '', [Validators.required]],
+    modulo: [this.moduloSelecionado, [Validators.required]],
+    acao: [ this.acaoSelecionada, [Validators.required]],
+    relatorio:[''],
     prioridade: ['', [Validators.required]],
     status: ['', [Validators.required]],
     dataCriacao: [{ value: null as Date | string | null, disabled: true }],
@@ -110,16 +118,23 @@ export class ChamadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Manipulador de eventos para o botão de adição de grupo.
-  * Exibe o formulário de adição de grupo.
+  * Manipulador de eventos para o botão de adição.
+  * Exibe o formulário de adição.
   */
   onAddButtonClick() {
     this.showForm = true;
+    console.log(this.showForm)
     this.chamadoForms.setValue({
       codigo: null,
+      cliente: null,
+      solicitante:null,
+      proprietario:null,
       titulo: null,
       descricao: null,
       prioridade: null,
+      modulo: null,
+      acao:null,
+      relatorio:null,
       status: null,
       dataCriacao: null,
       dataVersao: null,
@@ -176,11 +191,20 @@ export class ChamadosComponent implements OnInit, OnDestroy {
               detail: "Chamado cancelado com sucesso!",
               life: 3000
             });
-            //this.listarChamados();
+            this.listarChamados();
           }
         }
       })
     }
+  }
+  listarChamados() {
+    this.chamadoService.getAllChamados().pipe(takeUntil(this.destroy$)).subscribe(
+      {
+        next: (response) => {
+          response;
+        }
+      }
+    )
   }
 
   adicionarOuEditarChamado(): void {
@@ -193,11 +217,37 @@ export class ChamadosComponent implements OnInit, OnDestroy {
   adicionarChamado() {
     //TODO
     //Metodo para criar chamado
+    if(this.chamadoForms.valid){
+      const requestCreateChamado:CriarChamado = {
+        titulo: this.chamadoForms.value.titulo as string,
+        descricao: this.chamadoForms.value.descricao as string,
+        prioridade:this.chamadoForms.value.prioridade as Prioridade,
+        responsavel: this.chamadoForms.value.responsavel as string,
+        modulo: this.chamadoForms.value.modulo as Modulo,
+        acao: this.chamadoForms.value.acao as Acao
+      }
+      this.chamadoService.createChamado(requestCreateChamado).pipe(takeUntil(this.destroy$)).subscribe({
+        next: (data) => {
+          console.log("Chamado criado com sucesso! ", data)
+          this.messageService.add({
+            severity:'sucess',
+            summary:'Sucesso',
+            detail:'Chamado cadastrado com sucesso',
+            life:3000
+          })
+        }, error: (erro) => {
+          console.log("Não foi possível criar chamado ", erro)
+        }
+      })
+    }
+
   }
   editarChamado() {
     //TODO
     //Metodo para editar chamado
     //Editar somente as informações de Titulo, Responsavel, Prioridade
+
+    
   }
 
   //TODO 

@@ -1,28 +1,29 @@
-<p-toolbar 
-    styleClass="bg-gray-900 shadow-2" 
-    [style]="{ 'border-radius': '3rem', 'background-image': 'linear-gradient(to right, var(--bluegray-500), var(--bluegray-800))' }">
-        <div class="links-container">
-            <img src="https://primefaces.org/cdn/primeng/images/primeng.svg" />
-        </div>
-            <div class="links-container">
-                <button class="links" routerLink="/chamados">
-                    <i class="pi pi-home text-2xl"></i>
-                </button>
-                <button class="links">
-                    <i class="pi pi-user text-2xl"></i>
-                </button>
-                <button class="links">
-                    <i class="pi pi-search text-2xl"></i>
-                </button>
-            </div>
-        <div >
-            <div class="account-container">
-                <p-avatar 
-                    image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" 
-                    shape="circle" />
-                <span>
-                    Amy Elsner
-                </span>
-            </div>
-        </div>
-</p-toolbar>
+<div class="layout-topbar">
+    <a class="layout-topbar-logo" routerLink="">
+        <img src="assets/layout/images/{{headerService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="logo">
+        <span>SAKAI</span>
+    </a>
+
+    <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="headerService.onMenuToggle()">
+        <i class="pi pi-bars"></i>
+    </button>
+
+    <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button" (click)="headerService.showProfileSidebar()">
+        <i class="pi pi-ellipsis-v"></i>
+    </button>
+
+    <div #topbarmenu class="layout-topbar-menu" >
+        <button class="p-link layout-topbar-button">
+            <i class="pi pi-calendar"></i>
+            <span>Calendar</span>
+        </button>
+        <button class="p-link layout-topbar-button">
+            <i class="pi pi-user"></i>
+            <span>Profile</span>
+        </button>
+        <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
+            <i class="pi pi-cog"></i>
+            <span>Settings</span>
+        </button>
+    </div>
+</div>
