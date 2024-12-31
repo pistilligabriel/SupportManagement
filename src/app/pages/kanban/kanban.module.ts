@@ -2,11 +2,11 @@ import { NgModule } from "@angular/core";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { PrimengModule } from "../../libraries/primeng.module";
 import { RouterModule } from "@angular/router";
-import { SharedModule } from "../../shared/shared.module";
 import { CommonModule } from "@angular/common";
 import { KanbanComponent } from "./kanban.component";
 import { kanbanRouter } from "./kanban.routing";
 import { ColunasKanbanComponent } from "../../components/colunasKanban/colunasKanban.component";
+import { AppLayoutModule } from "../../layout/app.layout.module";
 
 @NgModule({
   declarations: [
@@ -18,7 +18,7 @@ import { ColunasKanbanComponent } from "../../components/colunasKanban/colunasKa
     FontAwesomeModule,
     RouterModule.forChild(kanbanRouter),
     PrimengModule,
-    SharedModule
+    AppLayoutModule
   ],
   providers: [],
 })

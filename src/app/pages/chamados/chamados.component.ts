@@ -21,6 +21,11 @@ import { Prioridade } from '../../model/enums/Prioridade.enum';
   styleUrls: ['./chamados.component.css'],
 })
 export class ChamadosComponent implements OnInit, OnDestroy {
+cancelarFormulario() {
+  this.chamadoForms.reset();
+  this.showForm = false;
+  this.listarChamados();
+}
 
   private readonly destroy$: Subject<void> = new Subject<void>();
   @ViewChild('tabelaChamados') tabelaChamados: Table | undefined;
@@ -74,14 +79,14 @@ export class ChamadosComponent implements OnInit, OnDestroy {
     descricao: ['', [Validators.required]],
     solicitante:[ '', [Validators.required]],
     proprietario: [ '', [Validators.required]],
-    modulo: [this.moduloSelecionado, [Validators.required]],
-    acao: [ this.acaoSelecionada, [Validators.required]],
+    modulo: [this.moduloSelecionado,], //[Validators.required]],
+    acao: [ this.acaoSelecionada, ],//[Validators.required]],
     relatorio:[''],
     prioridade: ['', [Validators.required]],
     status: ['', [Validators.required]],
-    dataCriacao: [{ value: null as Date | string | null, disabled: true }],
-    dataVersao: [{ value: null as Date | string | null, disabled: true }],
-    dataConclusao: [{ value: null as Date | string | null, disabled: true }],
+    dataCriacao: [{ value: '' as  string | null, disabled: true }],
+    dataVersao: [{ value: '' as  string | null, disabled: true }],
+    dataConclusao: [{ value: '' as  string | null, disabled: true }],
     responsavel: ['', [Validators.required]],
   });
 
@@ -113,17 +118,20 @@ export class ChamadosComponent implements OnInit, OnDestroy {
    * @returns {boolean} - Verdadeiro se estiver em modo de edição, falso caso contrário.
    */
   isEdicao(): boolean {
+    console.log(this.newChamado, 'isEdicao')
     console.log('Editar chamado:', this.chamadoForms.value.codigo)
     return !!this.chamadoForms.value.codigo;
   }
 
+  newChamado:boolean = false;
   /**
   * Manipulador de eventos para o botão de adição.
   * Exibe o formulário de adição.
   */
   onAddButtonClick() {
     this.showForm = true;
-    console.log(this.showForm)
+    this.newChamado = true;
+    console.log(this.showForm, this.newChamado,'onAddBtnClick')
     this.chamadoForms.setValue({
       codigo: null,
       cliente: null,
@@ -145,7 +153,7 @@ export class ChamadosComponent implements OnInit, OnDestroy {
 
   onEditButtonClick(chamado: Chamado): void {
     const formattedDate = format(new Date(chamado.dataVersao), 'dd/MM/yyyy HH:mm:ss');
-
+    this.newChamado = false;
     if (chamado.status === Status.CANCELADO) {
       this.confirmationService.confirm({
         header: 'Aviso',
@@ -201,33 +209,44 @@ export class ChamadosComponent implements OnInit, OnDestroy {
     this.chamadoService.getAllChamados().pipe(takeUntil(this.destroy$)).subscribe(
       {
         next: (response) => {
-          response;
+          if(response){
+            this.chamadoData = response;
+          };
         }
       }
     )
   }
 
   adicionarOuEditarChamado(): void {
-    if (this.isEdicao()) {
+    if (!this.newChamado) {
       this.editarChamado();
+      console.log(this.newChamado,'editar')
     }else{
       this.adicionarChamado();
+      console.log(this.newChamado,'add')
     }
   }
   adicionarChamado() {
+    console.log('addMethod')
     //TODO
     //Metodo para criar chamado
-    if(this.chamadoForms.valid){
-      const requestCreateChamado:CriarChamado = {
-        titulo: this.chamadoForms.value.titulo as string,
-        descricao: this.chamadoForms.value.descricao as string,
-        prioridade:this.chamadoForms.value.prioridade as Prioridade,
-        responsavel: this.chamadoForms.value.responsavel as string,
-        modulo: this.chamadoForms.value.modulo as Modulo,
-        acao: this.chamadoForms.value.acao as Acao
-      }
+    // if(this.chamadoForms.valid){
+    //   const requestCreateChamado:CriarChamado = {
+    //     titulo: this.chamadoForms.value.titulo as string,
+    //     descricao: this.chamadoForms.value.descricao as string,
+    //     prioridade:this.chamadoForms.value.prioridade as Prioridade,
+    //     responsavel: this.chamadoForms.value.responsavel as string,
+    //   }
+    const requestCreateChamado:CriarChamado = {
+      titulo: this.chamadoForms.value.titulo as string,
+      descricao: this.chamadoForms.value.descricao as string,
+      prioridade:this.chamadoForms.value.prioridade as Prioridade,
+      responsavel: this.chamadoForms.value.responsavel as string,
+    }
+      console.log(requestCreateChamado)
       this.chamadoService.createChamado(requestCreateChamado).pipe(takeUntil(this.destroy$)).subscribe({
         next: (data) => {
+          console.log('Dentro do service')
           console.log("Chamado criado com sucesso! ", data)
           this.messageService.add({
             severity:'sucess',
@@ -238,8 +257,10 @@ export class ChamadosComponent implements OnInit, OnDestroy {
         }, error: (erro) => {
           console.log("Não foi possível criar chamado ", erro)
         }
+        
       })
-    }
+      this.showForm = false;
+      this.listarChamados();
 
   }
   editarChamado() {

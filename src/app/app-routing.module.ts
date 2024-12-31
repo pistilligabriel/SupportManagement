@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
+import { AppLayoutComponent } from './layout/app.layout.component';
 
 const routes: Routes = [
   {
-    path:'',
-    redirectTo: 'home',
-    pathMatch: 'full'
+    path:'',component: AppLayoutComponent,
+    children: [
+      {path:'', redirectTo:'home', pathMatch:'full'}
+    ]
   },
   {
     path:'login',
@@ -21,7 +23,7 @@ const routes: Routes = [
     loadChildren:() => import('./pages/kanban/kanban.module').then(m => m.KanbanModule)
   },
   {
-   path: 'chamados',
+   path: 'controle/geral',
    loadChildren:() => import('./pages/chamados/chamados.module').then(m => m.ChamadosModule)
   }
 ];

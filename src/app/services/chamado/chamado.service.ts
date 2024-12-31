@@ -21,19 +21,19 @@ constructor(
 ) { }
 
   getAllChamados():Observable<Array<Chamado>>{
-    return this.http.get<Array<Chamado>>(`${this.Api_URL}/chamados`,this.httpOptions)
+    return this.http.get<Array<Chamado>>(`${this.Api_URL}/api/v1/chamados`,this.httpOptions)
   }
 
   getChamadoByPk(codigo: bigint):Observable<Chamado>{
-    return this.http.get<Chamado>(`${this.Api_URL}/${codigo}`,this.httpOptions)
+    return this.http.get<Chamado>(`${this.Api_URL}/api/v1/chamados/${codigo}`,this.httpOptions)
   }
 
   createChamado(chamado: CriarChamado):Observable<Array<Chamado>>{
-    return this.http.post<Array<Chamado>>(`${this.Api_URL}/chamados`,chamado,this.httpOptions)
+    return this.http.post<Array<Chamado>>(`${this.Api_URL}/api/v1/chamados`,chamado,this.httpOptions)
   }
 
   cancelarChamado(codigo:bigint):Observable<Array<Chamado>>{
-    return this.http.post<Array<Chamado>>(`${this.Api_URL}/cancelar/${codigo}`,this.httpOptions)
+    return this.http.post<Array<Chamado>>(`${this.Api_URL}/api/v1/cancelar/${codigo}`,this.httpOptions)
   }
 
   //TODO
