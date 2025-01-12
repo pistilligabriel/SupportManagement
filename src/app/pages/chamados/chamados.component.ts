@@ -15,6 +15,8 @@ import { Modulo } from '../../model/interfaces/Modulo';
 import { CriarChamado } from '../../model/interfaces/CriarChamado';
 import { Prioridade } from '../../model/enums/Prioridade.enum';
 import { VisualizarChamado } from '../../model/interfaces/VisualizarChamado';
+import { Cliente } from '../../model/interfaces/Cliente';
+import { ClienteService } from '../../services/cliente/cliente.service';
 
 @Component({
   selector: 'app-chamados',
@@ -35,13 +37,9 @@ export class ChamadosComponent implements OnInit, OnDestroy {
 
   modoVisualizacao = false;
 
-  acao!: Acao[];
+  clientes!: Cliente[];
 
-  acaoSelecionada!: Acao;
-
-  modulo!: Modulo[];
-
-  moduloSelecionado!: Modulo;
+  clienteSelecionado!: Cliente;
 
   chamadoData!: Chamado[];
 
@@ -57,11 +55,17 @@ export class ChamadosComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private confirmationService: ConfirmationService,
     private chamadoService: ChamadoService,
+    private clienteService: ClienteService,
     private messageService: MessageService
   ) {}
 
   ngOnInit() {
     this.listarChamados();
+    this.clienteService.buscarTodosClientes().subscribe({
+      next: (data) => {
+        this.clientes = data;
+      },
+    });
     this.cols = [
       { field: 'codigo', header: 'Código' },
       { field: 'titulo', header: 'Título' },
@@ -77,7 +81,7 @@ export class ChamadosComponent implements OnInit, OnDestroy {
 
   public chamadoForms = this.formBuilder.group({
     codigo: [null as bigint | null],
-    cliente: ['', [Validators.required]],
+    cliente: [this.clienteSelecionado, [Validators.required]],
     titulo: ['', [Validators.required]],
     descricao: ['', [Validators.required]],
     solicitante: ['', [Validators.required]],
@@ -125,7 +129,7 @@ export class ChamadosComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.chamadoForms.setValue({
             codigo: data.codigo as bigint,
-            cliente: data.cliente as string,
+            cliente: data.cliente as Cliente,
             solicitante: data.solicitante as string,
             responsavel: data.responsavel as string,
             titulo: data.titulo as string,
@@ -267,7 +271,7 @@ export class ChamadosComponent implements OnInit, OnDestroy {
     //     responsavel: this.chamadoForms.value.responsavel as string,
     //   }
     const requestCreateChamado: CriarChamado = {
-      cliente: this.chamadoForms.value.cliente as string,
+      cliente: this.chamadoForms.value.cliente as Cliente,
       titulo: this.chamadoForms.value.titulo as string,
       solicitante: this.chamadoForms.value.solicitante as string,
       descricao: this.chamadoForms.value.descricao as string,

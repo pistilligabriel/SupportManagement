@@ -1,0 +1,5 @@
+export enum Produto {
+  MASTERCOMMERCE,
+  MASTERCLINIC,
+  MASTERCOMMERCE_LITE,
+}

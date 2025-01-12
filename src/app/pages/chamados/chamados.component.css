@@ -1,16 +1,16 @@
-.controls{
-    display: flex;
-    flex-direction: row;
-    justify-content:start;
-    align-items: center;
-    gap:15px
+.controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  gap: 15px;
 }
 
-.inputs{
-    height: 20px;
-    width: 20px;
+.inputs {
+  height: 20px;
+  width: 20px;
 }
 
-.btns{
-    margin: 0 10px;
+.btns {
+  margin: 0 10px;
 }

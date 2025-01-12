@@ -1,8 +1,9 @@
 import { Prioridade } from '../enums/Prioridade.enum';
+import { Cliente } from './Cliente';
 
 export interface VisualizarChamado {
   codigo: bigint;
-  cliente: string;
+  cliente: Cliente;
   titulo: string;
   solicitante: string;
   descricao: string;
