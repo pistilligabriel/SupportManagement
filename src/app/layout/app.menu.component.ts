@@ -23,16 +23,15 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Controle',
                 items: [
-                    { label: 'KanBan', icon: 'pi pi-fw pi-objects-column', routerLink: ['/controle/kanban'] },
                     { label: 'Geral', icon: 'pi pi-fw pi-list-check', routerLink: ['/controle/geral'] },
                     { label: 'Status', icon: 'pi pi-fw pi-sliders-v', routerLink: ['/controle/status'] },
-                    { label: 'Classificação', icon: 'pi pi-fw pi-sitemap', routerLink: ['/controle/classificacao'] },
+                    { label: 'Setores', icon: 'pi-objects-column', routerLink: ['/controle/setor']},
                 ]
             },
             {
-                label: 'Clientes',
+                label: 'Setores',
                 items: [
-                    { label: 'Clientes', icon: 'pi pi-fw pi-user', routerLink: ['/clientes']},
+                    { label: 'Setores', icon: 'pi pi-fw pi-user', routerLink: ['/setores']}
                 ]
             },
             {

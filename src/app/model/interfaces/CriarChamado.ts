@@ -1,9 +1,8 @@
 import { Prioridade } from '../enums/Prioridade.enum';
-import { Acao } from './Acao';
-import { Modulo } from './Modulo';
+import {Setor} from "../enums/Setor.enum";
 
 export interface CriarChamado {
-  cliente: string;
+  setor: Setor;
   titulo: string;
   solicitante: string;
   descricao: string;

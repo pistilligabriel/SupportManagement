@@ -19,10 +19,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
   },
   {
-    path: 'kanban',
-    loadChildren:() => import('./pages/kanban/kanban.module').then(m => m.KanbanModule)
-  },
-  {
    path: 'controle/geral',
    loadChildren:() => import('./pages/chamados/chamados.module').then(m => m.ChamadosModule)
   }

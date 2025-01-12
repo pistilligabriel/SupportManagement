@@ -5,7 +5,6 @@
 
       <div *ngIf="!showForm" class="grid">
         <div class="col-12">
-          <div class="flex justify-content-end"></div>
           <p-table
             #tabelaChamados
             [columns]="colunasSelecionadas"
@@ -20,7 +19,7 @@
             [resizableColumns]="true"
             columnResizeMode="expand"
             styleClass="p-datatable-gridlines"
-            [tableStyle]="{ 'min-width': '50rem' }"
+            [tableStyle]="{ 'min-width': '50rem', width: '100%' }"
             [rowHover]="true"
             [showCurrentPageReport]="true"
             [rowsPerPageOptions]="[5, 10, 25, 50, 100]"
@@ -37,6 +36,7 @@
             dataKey="codigo"
             currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords} registros"
             [filterDelay]="0"
+            [style]="{ overflow: 'auto' }"
           >
             <ng-template pTemplate="caption">
               <div class="flex">
@@ -167,15 +167,17 @@
           >
             <div class="card grid gap-4 p-fluid">
               <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
-                <label for="cliente">Cliente: </label>
-                <input
+                <label>Setor: </label>
+                <p-dropdown
                   [disabled]="modoVisualizacao"
-                  pInputText
-                  formControlName="cliente"
+                  [options]="setorOptions"
+                  formControlName="setor"
+                  optionLabel="label"
+                  optionValue="codigo"
                 />
               </div>
               <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
-                <label for="titulo">Título: </label>
+                <label>Título: </label>
                 <input
                   [disabled]="modoVisualizacao"
                   pInputText
@@ -183,7 +185,7 @@
                 />
               </div>
               <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
-                <label for="solicitante">Solicitante: </label>
+                <label>Solicitante: </label>
                 <input
                   [disabled]="modoVisualizacao"
                   pInputText
@@ -192,7 +194,7 @@
                 />
               </div>
               <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
-                <label for="responsavel">Responsável: </label>
+                <label>Responsável: </label>
                 <input
                   [disabled]="modoVisualizacao"
                   pInputText
@@ -201,7 +203,7 @@
                 />
               </div>
               <div class="field col-12" style="margin-bottom: 1rem">
-                <label for="descricao">Descrição: </label>
+                <label>Descrição: </label>
                 <textarea
                   pInputTextarea
                   [autoResize]="true"

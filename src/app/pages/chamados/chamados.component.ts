@@ -1,7 +1,7 @@
-import { Chamado } from './../../model/interfaces/Chamado';
+import { Chamado } from '../../model/interfaces/Chamado';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Table, TableRowUnSelectEvent } from 'primeng/table';
+import { Table } from 'primeng/table';
 import { Subject, take, takeUntil } from 'rxjs';
 import { Column } from '../../model/interfaces/Column';
 import { ExportColumn } from '../../model/interfaces/ExportColumn';
@@ -10,11 +10,11 @@ import { format } from 'date-fns';
 import { Status } from '../../model/enums/Status.enum';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ChamadoService } from '../../services/chamado/chamado.service';
-import { Acao } from '../../model/interfaces/Acao';
-import { Modulo } from '../../model/interfaces/Modulo';
 import { CriarChamado } from '../../model/interfaces/CriarChamado';
 import { Prioridade } from '../../model/enums/Prioridade.enum';
 import { VisualizarChamado } from '../../model/interfaces/VisualizarChamado';
+import {Setor} from "../../model/enums/Setor.enum";
+import {DropDownOptions} from "../../model/interfaces/DropDownOptions";
 
 @Component({
   selector: 'app-chamados',
@@ -22,12 +22,6 @@ import { VisualizarChamado } from '../../model/interfaces/VisualizarChamado';
   styleUrls: ['./chamados.component.css'],
 })
 export class ChamadosComponent implements OnInit, OnDestroy {
-  cancelarFormulario() {
-    this.chamadoForms.reset();
-    this.showForm = false;
-    this.listarChamados();
-  }
-
   private readonly destroy$: Subject<void> = new Subject<void>();
   @ViewChild('tabelaChamados') tabelaChamados: Table | undefined;
 
@@ -35,13 +29,6 @@ export class ChamadosComponent implements OnInit, OnDestroy {
 
   modoVisualizacao = false;
 
-  acao!: Acao[];
-
-  acaoSelecionada!: Acao;
-
-  modulo!: Modulo[];
-
-  moduloSelecionado!: Modulo;
 
   chamadoData!: Chamado[];
 
@@ -52,6 +39,10 @@ export class ChamadosComponent implements OnInit, OnDestroy {
   colunasSelecionadas!: Column[];
 
   exportColumn!: ExportColumn[];
+
+  setorOptions!: DropDownOptions[];
+
+  selectedSetor!: Setor
 
   constructor(
     private formBuilder: FormBuilder,
@@ -73,11 +64,17 @@ export class ChamadosComponent implements OnInit, OnDestroy {
     ];
 
     this.colunasSelecionadas = this.cols;
+
+    this.setorOptions = Object.entries(Setor).map(([key,value]) => ({
+      codigo:key,
+      label:value,
+    }))
+    console.log(this.setorOptions)
   }
 
   public chamadoForms = this.formBuilder.group({
     codigo: [null as bigint | null],
-    cliente: ['', [Validators.required]],
+    setor: ['', [Validators.required]],
     titulo: ['', [Validators.required]],
     descricao: ['', [Validators.required]],
     solicitante: ['', [Validators.required]],
@@ -125,7 +122,7 @@ export class ChamadosComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.chamadoForms.setValue({
             codigo: data.codigo as bigint,
-            cliente: data.cliente as string,
+            setor: data.setor as Setor,
             solicitante: data.solicitante as string,
             responsavel: data.responsavel as string,
             titulo: data.titulo as string,
@@ -168,7 +165,7 @@ export class ChamadosComponent implements OnInit, OnDestroy {
     console.log(this.showForm, this.newChamado, 'onAddBtnClick');
     this.chamadoForms.setValue({
       codigo: null,
-      cliente: null,
+      setor: null,
       solicitante: null,
       titulo: null,
       descricao: null,
@@ -257,17 +254,9 @@ export class ChamadosComponent implements OnInit, OnDestroy {
   }
   novoChamado() {
     console.log('addMethod');
-    //TODO
-    //Metodo para criar chamado
-    // if(this.chamadoForms.valid){
-    //   const requestCreateChamado:CriarChamado = {
-    //     titulo: this.chamadoForms.value.titulo as string,
-    //     descricao: this.chamadoForms.value.descricao as string,
-    //     prioridade:this.chamadoForms.value.prioridade as Prioridade,
-    //     responsavel: this.chamadoForms.value.responsavel as string,
-    //   }
+
     const requestCreateChamado: CriarChamado = {
-      cliente: this.chamadoForms.value.cliente as string,
+      setor: this.chamadoForms.value.setor as Setor,
       titulo: this.chamadoForms.value.titulo as string,
       solicitante: this.chamadoForms.value.solicitante as string,
       descricao: this.chamadoForms.value.descricao as string,
@@ -299,6 +288,7 @@ export class ChamadosComponent implements OnInit, OnDestroy {
           });
         },
       });
+
     this.showForm = false;
     this.listarChamados();
   }
@@ -316,4 +306,11 @@ export class ChamadosComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  cancelarFormulario() {
+    this.chamadoForms.reset();
+    this.showForm = false;
+    this.listarChamados();
+  }
+
 }
