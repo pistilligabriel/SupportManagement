@@ -1,4 +1,3 @@
-
 <div class="grid">
   <div class="col-12">
     <p-card header="Chamados" styleClass="shadow-3 m-5 text-indigo">
@@ -13,7 +12,8 @@
             [value]="chamadoData"
             [(selection)]="chamadoSelecionado"
             (onRowSelect)="onRowSelect($event)"
-            selectionMode="multiple"
+            (onRowUnselect)="onRowUnselect($event)"
+            selectionMode="single"
             [rows]="5"
             [paginator]="true"
             [responsive]="true"
@@ -52,16 +52,16 @@
                   >
                     Adicionar
                   </button>
-                  <!-- <button
-                            pButton
-                            pRipple
-                            icon="pi pi-ban"
-                            class="p-button-danger"
-                            (click)="desativarProdutosSelecionados()"
-                            [disabled]="
-                              !produtoSelecionado || !produtoSelecionado.length
-                            "
-                          ></button> -->
+                  <button
+                    pButton
+                    pRipple
+                    icon="pi pi-eye"
+                    class="p-button-secundary"
+                    (click)="
+                      chamadoSelecionado &&
+                        visualizarChamado(chamadoSelecionado)
+                    "
+                  ></button>
 
                   <p-iconField iconPosition="left">
                     <p-inputIcon styleClass="pi pi-search" />
@@ -118,7 +118,7 @@
             </ng-template>
 
             <ng-template pTemplate="body" let-chamado let-columns="columns">
-              <tr>
+              <tr [pSelectableRow]="chamado" (onClick)="onRowSelect(chamado)">
                 <td>
                   <div
                     class="flex justify-content-center gap-2 align-content-center align-items-center"
@@ -168,43 +168,37 @@
             <div class="card grid gap-4 p-fluid">
               <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
                 <label for="cliente">Cliente: </label>
-                <input pInputText formControlName="cliente" />
+                <input
+                  [disabled]="modoVisualizacao"
+                  pInputText
+                  formControlName="cliente"
+                />
               </div>
               <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
                 <label for="titulo">Título: </label>
-                <input pInputText formControlName="titulo" />
+                <input
+                  [disabled]="modoVisualizacao"
+                  pInputText
+                  formControlName="titulo"
+                />
               </div>
               <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
                 <label for="solicitante">Solicitante: </label>
-                <input pInputText type="text" formControlName="solicitante" />
+                <input
+                  [disabled]="modoVisualizacao"
+                  pInputText
+                  type="text"
+                  formControlName="solicitante"
+                />
               </div>
               <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
-                <label for="proprietario">Proprietário: </label>
-                <input pInputText type="text" formControlName="proprietario" />
-              </div>
-              <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
-                <label for="modulo">Módulo: </label>
-                <p-dropdown
-                  formControlName="modulo"
-                  [options]="modulo"
-                  optionLabel="modulo"
-                  optionValue="codigo"
-                  placeholder="Selecione o módulo"
-                ></p-dropdown>
-              </div>
-              <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
-                <label for="acao">Ação: </label>
-                <p-dropdown
-                  formControlName="acao"
-                  [options]="acao"
-                  optionLabel="acao"
-                  optionValue="codigo"
-                  placeholder="Selecione a ação"
-                ></p-dropdown>
-              </div>
-              <div class="field col-12" style="margin-bottom: 1rem">
-                <label for="relatorio">Relatório: </label>
-                <input pInputText type="text" formControlName="relatorio" />
+                <label for="responsavel">Responsável: </label>
+                <input
+                  [disabled]="modoVisualizacao"
+                  pInputText
+                  type="text"
+                  formControlName="responsavel"
+                />
               </div>
               <div class="field col-12" style="margin-bottom: 1rem">
                 <label for="descricao">Descrição: </label>
@@ -212,6 +206,7 @@
                   pInputTextarea
                   [autoResize]="true"
                   formControlName="descricao"
+                  [disabled]="modoVisualizacao"
                 ></textarea>
               </div>
             </div>
@@ -222,6 +217,7 @@
                 class="flex flex-row justify-content-left align-content-center align-itens-center m-1"
               >
                 <p-button
+                  *ngIf="!modoVisualizacao"
                   class="btns"
                   type="submit"
                   (onClick)="adicionarOuEditarChamado()"
