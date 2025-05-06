@@ -52,16 +52,7 @@
                   >
                     Adicionar
                   </button>
-                  <button
-                    pButton
-                    pRipple
-                    icon="pi pi-eye"
-                    class="p-button-secundary"
-                    (click)="
-                      chamadoSelecionado &&
-                        visualizarChamado(chamadoSelecionado)
-                    "
-                  ></button>
+                  
 
                   <p-iconField iconPosition="left">
                     <p-inputIcon styleClass="pi pi-search" />
@@ -118,7 +109,7 @@
             </ng-template>
 
             <ng-template pTemplate="body" let-chamado let-columns="columns">
-              <tr [pSelectableRow]="chamado" (onClick)="onRowSelect(chamado)">
+              <tr [pSelectableRow]="chamado" (click)="onRowSelect(chamado)">
                 <td>
                   <div
                     class="flex justify-content-center gap-2 align-content-center align-items-center"
@@ -131,14 +122,14 @@
                       pTooltip="Editar Chamado"
                       (click)="onEditButtonClick(chamado)"
                     ></button>
-                    <!-- <button
+                    <button
                       pButton
                       pRipple
                       class="p-button-rounded p-button-text p-button-danger"
-                      icon="pi pi-ban"
-                      pTooltip="Cancelar Chamado"
-                      (click)="onDisableButtonClick(chamado)"
-                    ></button> -->
+                      icon="pi pi-eye"
+                      pTooltip="Visualizar Chamado"
+                      (click)="onVisualizarChamado(chamado)"
+                    ></button>
                   </div>
                 </td>
                 <ng-container *ngFor="let col of columns">
@@ -166,6 +157,16 @@
             (ngSubmit)="adicionarOuEditarChamado()"
           >
             <div class="card grid gap-4 p-fluid">
+              <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
+                <label>Status: </label>
+                <input
+                  variant="filled"
+                  pSize="small"
+                  [disabled]="true"
+                  pInputText
+                  formControlName="status"
+                />
+              </div>
               <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
                 <label>Setor: </label>
                 <p-dropdown
@@ -196,7 +197,8 @@
               <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
                 <label>Responsável: </label>
                 <input
-                  [disabled]="modoVisualizacao"
+                  [readOnly]="true"
+                  variant="filled"
                   pInputText
                   type="text"
                   formControlName="responsavel"

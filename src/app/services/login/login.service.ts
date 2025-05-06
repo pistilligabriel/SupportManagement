@@ -23,10 +23,10 @@ export class LoginService {
 
   loginUser(usuario: AuthRequest): Observable<AuthResponse> {
     console.log(usuario);
-    return this.http.post<AuthResponse>(`${this.API_URL}/api/login`, usuario);
+    return this.http.post<AuthResponse>(`${this.API_URL}/api/v1/login`, usuario);
   }
   isLoggedIn() {
     const token = this.cookie.get('token');
-    return token ? true : false;
+    return !!token;
   }
 }

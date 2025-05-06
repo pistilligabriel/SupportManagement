@@ -15,6 +15,7 @@ import { Prioridade } from '../../model/enums/Prioridade.enum';
 import { VisualizarChamado } from '../../model/interfaces/VisualizarChamado';
 import {Setor} from "../../model/enums/Setor.enum";
 import {DropDownOptions} from "../../model/interfaces/DropDownOptions";
+import { EditarChamado } from '../../model/interfaces/EditarChamado';
 
 @Component({
   selector: 'app-chamados',
@@ -29,10 +30,13 @@ export class ChamadosComponent implements OnInit, OnDestroy {
 
   modoVisualizacao = false;
 
+  chamado!:Chamado;
 
   chamadoData!: Chamado[];
 
   chamadoSelecionado: VisualizarChamado | null = null;
+
+  chamadoEdicao!:EditarChamado;
 
   cols!: Column[];
 
@@ -101,6 +105,7 @@ export class ChamadosComponent implements OnInit, OnDestroy {
   onRowSelect(event: any) {
     console.log('Row selected:', event.data);
     this.chamadoSelecionado = event.data;
+    console.log(this.chamadoSelecionado?.setor)
   }
 
   onRowUnselect(event: any) {
@@ -108,7 +113,7 @@ export class ChamadosComponent implements OnInit, OnDestroy {
     this.chamadoSelecionado = null;
   }
 
-  visualizarChamado(chamado: VisualizarChamado) {
+  onVisualizarChamado(chamado: VisualizarChamado) {
     this.modoVisualizacao = true;
     if (this.chamadoSelecionado) {
       chamado = this.chamadoSelecionado;
@@ -120,9 +125,11 @@ export class ChamadosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
+          console.log('Setor retornado pelo serviço:', data.setor); // Verifique o valor aqui
+          console.log('Opções de setor disponíveis:', this.setorOptions); // Verifique as opções disponíveis
           this.chamadoForms.setValue({
             codigo: data.codigo as bigint,
-            setor: data.setor as Setor,
+            setor: this.setorOptions.find(option => option.label === data.setor)?.codigo || data.setor,
             solicitante: data.solicitante as string,
             responsavel: data.responsavel as string,
             titulo: data.titulo as string,
@@ -179,6 +186,7 @@ export class ChamadosComponent implements OnInit, OnDestroy {
 
   onEditButtonClick(chamado: Chamado): void {
     this.newChamado = false;
+    this.modoVisualizacao = false;
     if (chamado.status === Status.CANCELADO) {
       this.confirmationService.confirm({
         header: 'Aviso',
@@ -190,6 +198,7 @@ export class ChamadosComponent implements OnInit, OnDestroy {
         this.chamadoForms.patchValue({
           codigo: data.codigo,
           titulo: data.titulo,
+          setor:data.setor,
           descricao: data.descricao,
           prioridade: data.prioridade,
           status: data.status,
@@ -198,6 +207,7 @@ export class ChamadosComponent implements OnInit, OnDestroy {
           responsavel: data.responsavel,
         });
       });
+      
     }
   }
 
@@ -245,7 +255,7 @@ export class ChamadosComponent implements OnInit, OnDestroy {
 
   adicionarOuEditarChamado(): void {
     if (!this.newChamado) {
-      this.editarChamado();
+      this.onEditButtonClick(this.chamado);
       console.log(this.newChamado, 'editar');
     } else {
       this.novoChamado();
@@ -277,6 +287,8 @@ export class ChamadosComponent implements OnInit, OnDestroy {
             detail: 'Chamado cadastrado com sucesso',
             life: 3000,
           });
+          this.showForm = false;
+          this.listarChamados();
         },
         error: (erro) => {
           console.log('Não foi possível criar chamado ', erro);
@@ -288,15 +300,9 @@ export class ChamadosComponent implements OnInit, OnDestroy {
           });
         },
       });
+  }
 
-    this.showForm = false;
-    this.listarChamados();
-  }
-  editarChamado() {
-    //TODO
-    //Metodo para editar chamado
-    //Editar somente as informações de Titulo, Responsavel, Prioridade
-  }
+  
 
   //TODO
   //Criar metodos para colocar nos botões de cada Status. Ex: Quando chamado status == novo, ter o botão de Iniciar que muda o status para Em Andamento.
