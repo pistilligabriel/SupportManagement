@@ -20,6 +20,8 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ListboxModule } from 'primeng/listbox';
+import { InputMaskModule } from 'primeng/inputmask';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [],
@@ -45,6 +47,8 @@ import { ListboxModule } from 'primeng/listbox';
     InputTextModule,
     InputTextareaModule,
     ListboxModule,
+    InputMaskModule,
+    DialogModule
   ],
   exports: [
     BadgeModule,
@@ -68,6 +72,8 @@ import { ListboxModule } from 'primeng/listbox';
     InputTextModule,
     InputTextareaModule,
     ListboxModule,
+    InputMaskModule,
+    DialogModule
   ],
 })
 export class PrimengModule {}

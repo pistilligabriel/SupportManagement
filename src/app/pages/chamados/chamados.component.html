@@ -5,72 +5,39 @@
 
       <div *ngIf="!showForm" class="grid">
         <div class="col-12">
-          <p-table
-            #tabelaChamados
-            [columns]="colunasSelecionadas"
-            [value]="chamadoData"
-            [(selection)]="chamadoSelecionado"
-            (onRowSelect)="onRowSelect($event)"
-            (onRowUnselect)="onRowUnselect($event)"
-            selectionMode="single"
-            [rows]="5"
-            [paginator]="true"
-            [responsive]="true"
-            [resizableColumns]="true"
-            columnResizeMode="expand"
-            styleClass="p-datatable-gridlines"
-            [tableStyle]="{ 'min-width': '50rem', width: '100%' }"
-            [rowHover]="true"
-            [showCurrentPageReport]="true"
-            [rowsPerPageOptions]="[5, 10, 25, 50, 100]"
-            [globalFilterFields]="[
+          <p-table #tabelaChamados [columns]="colunasSelecionadas" [value]="chamadoData"
+            (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" selectionMode="single"
+            [rows]="5" [paginator]="true" [responsive]="true" [resizableColumns]="true" columnResizeMode="expand"
+            styleClass="p-datatable-gridlines" [tableStyle]="{ 'min-width': '50rem', width: '100%' }" [rowHover]="true"
+            [showCurrentPageReport]="true" [rowsPerPageOptions]="[5, 10, 25, 50, 100]" [globalFilterFields]="[
               'codigo',
-              'titulo',
               'status',
+              'titulo',
+              'solicitante',
               'prioridade',
               'responsavel',
               'dataCriacao',
               'dataConclusao'
-            ]"
-            [exportHeader]="'customExportHeader'"
-            dataKey="codigo"
-            currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords} registros"
-            [filterDelay]="0"
-            [style]="{ overflow: 'auto' }"
-          >
+            ]" [exportHeader]="'customExportHeader'" dataKey="codigo"
+            currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords} registros" [filterDelay]="0"
+            [style]="{ overflow: 'auto' }">
             <ng-template pTemplate="caption">
               <div class="flex">
                 <div class="controls">
-                  <button
-                    type="button"
-                    class="mr-2"
-                    pButton
-                    pRipple
-                    icon="pi pi-plus"
-                    pTooltip="Adicionar Chamado"
-                    (click)="onAddButtonClick()"
-                  >
+                  <button type="button" class="mr-2" pButton pRipple icon="pi pi-plus" pTooltip="Adicionar Chamado"
+                    (click)="onAddButtonClick()">
                     Adicionar
                   </button>
-                  
+
 
                   <p-iconField iconPosition="left">
                     <p-inputIcon styleClass="pi pi-search" />
-                    <input
-                      type="text"
-                      pInputText
-                      placeholder="Search"
-                      [(ngModel)]="valorPesquisa"
-                    />
+                    <input type="text" pInputText placeholder="Search" [(ngModel)]="valorPesquisa"
+                      (input)="tabelaChamados.filterGlobal(valorPesquisa,'contains')" />
                   </p-iconField>
 
-                  <button
-                    pButton
-                    label="Limpar"
-                    class="p-button-outlined"
-                    icon="pi pi-eraser"
-                    (click)="clear(tabelaChamados)"
-                  ></button>
+                  <button pButton label="Limpar" class="p-button-outlined" icon="pi pi-eraser"
+                    (click)="clear(tabelaChamados)"></button>
                 </div>
               </div>
             </ng-template>
@@ -78,30 +45,15 @@
             <ng-template pTemplate="header" let-columns>
               <tr>
                 <th style="width: 3rem">Editar</th>
-                <th
-                  *ngFor="let col of columns"
-                  pResizableColumn
-                  [pSortableColumn]="col.field"
-                >
+                <th *ngFor="let col of columns" pResizableColumn [pSortableColumn]="col.field">
                   <div class="flex justify-content-between align-items-center">
-                    <div
-                      class="flex justify-content-between align-items-center"
-                    >
+                    <div class="flex justify-content-between align-items-center">
                       {{ col.header }}
                     </div>
-                    <div
-                      class="flex justify-content-between align-items-center"
-                    >
+                    <div class="flex justify-content-between align-items-center">
                       <p-sortIcon field="{{ col.field }}"></p-sortIcon>
-                      <p-columnFilter
-                        type="text"
-                        [field]="col.field"
-                        display="menu"
-                        matchMode="contains"
-                        [showMatchModes]="true"
-                        [showOperator]="false"
-                        [showAddButton]="true"
-                      ></p-columnFilter>
+                      <p-columnFilter type="text" [field]="col.field" display="menu" matchMode="contains"
+                        [showMatchModes]="true" [showOperator]="false" [showAddButton]="true"></p-columnFilter>
                     </div>
                   </div>
                 </th>
@@ -109,27 +61,22 @@
             </ng-template>
 
             <ng-template pTemplate="body" let-chamado let-columns="columns">
-              <tr [pSelectableRow]="chamado" (click)="onRowSelect(chamado)">
+              <tr [pSelectableRow]="chamado" (click)="onRowSelect(chamado)"
+                [ngClass]="{'linha-cancelada': chamado?.status === Status.CANCELADO, 'linha-concluido': chamado.status === Status.CONCLUIDO, 'linha-em-andamento': chamado?.status === Status.EM_ANDAMENTO}">
                 <td>
-                  <div
-                    class="flex justify-content-center gap-2 align-content-center align-items-center"
-                  >
+                  <div class="flex justify-content-center gap-2 align-content-center align-items-center">
                     <button
-                      pButton
-                      pRipple
-                      class="p-button-rounded p-button-text"
-                      icon="pi pi-pencil"
-                      pTooltip="Editar Chamado"
-                      (click)="onEditButtonClick(chamado)"
-                    ></button>
+                      *ngIf="usuario?.tipo === Tipo.ADMIN && (chamado?.status === Status.NOVO || chamado?.status === Status.EM_ANDAMENTO)"
+                      pButton pRipple [ngClass]="{'icon-cancelado': chamado?.status === Status.CANCELADO}"
+                      class="p-button-rounded p-button-text" icon="pi pi-sign-in" pTooltip="Acessar Chamado"
+                      (click)="onEditButtonClick(chamado)"></button>
+                    <button pButton pRipple [ngClass]="{'icon-cancelado': chamado?.status === Status.CANCELADO}"
+                      class="p-button-rounded p-button-text p-button-danger" icon="pi pi-eye"
+                      pTooltip="Visualizar Chamado" (click)="onEditButtonClick(chamado)"></button>
                     <button
-                      pButton
-                      pRipple
-                      class="p-button-rounded p-button-text p-button-danger"
-                      icon="pi pi-eye"
-                      pTooltip="Visualizar Chamado"
-                      (click)="onVisualizarChamado(chamado)"
-                    ></button>
+                      *ngIf="usuario?.tipo === Tipo.ADMIN && (chamado?.status === Status.NOVO || chamado?.status === Status.EM_ANDAMENTO)"
+                      pButton pRipple class="p-button-rounded p-button-text p-button-danger" icon="pi pi-times"
+                      pTooltip="Cancelar Chamado" (click)="cancelarChamado(chamado?.codigo)"></button>
                   </div>
                 </td>
                 <ng-container *ngFor="let col of columns">
@@ -152,88 +99,90 @@
 
       <div *ngIf="showForm" class="mt-2">
         <div class="gap-4">
-          <form
-            [formGroup]="chamadoForms"
-            (ngSubmit)="adicionarOuEditarChamado()"
-          >
+          <form [formGroup]="chamadoForms">
             <div class="card grid gap-4 p-fluid">
-              <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
-                <label>Status: </label>
-                <input
-                  variant="filled"
-                  pSize="small"
-                  [disabled]="true"
-                  pInputText
-                  formControlName="status"
-                />
+              <div style="margin-bottom: 1rem;display: flex; flex-direction: row; gap:20px">
+                <div class="field col-12 md:col-6" style="margin-bottom: 1rem;display: flex; flex-direction: column;">
+                  <label>Status: </label>
+                  <input variant="filled" pSize="small" pInputText formControlName="status" style="width: 150px;" />
+                </div>
+                <div class="field col-12 md:col-6" style="margin-bottom: 1rem;display: flex; flex-direction: column;">
+                  <label>Data Criação: </label>
+                  <p-inputMask variant="filled" size="small" mask="99/99/9999" formControlName="dataCriacao" />
+                </div>
+                <div class="field col-12 md:col-6" style="margin-bottom: 1rem;display: flex; flex-direction: column;">
+                  <label>Data Conclusão: </label>
+                  <p-inputMask variant="filled" size="small" mask="99/99/9999" formControlName="dataConclusao" />
+                </div>
               </div>
               <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
                 <label>Setor: </label>
-                <p-dropdown
-                  [disabled]="modoVisualizacao"
-                  [options]="setorOptions"
-                  formControlName="setor"
-                  optionLabel="label"
-                  optionValue="codigo"
-                />
+                <p-dropdown [disabled]="modoVisualizacao" [options]="setorOptions" formControlName="setor"
+                  optionLabel="label" optionValue="codigo" />
+              </div>
+              <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
+                <label>Prioridade: </label>
+                <p-dropdown [disabled]="modoVisualizacao" [options]="prioridadeOptions" formControlName="prioridade"
+                  optionLabel="label" optionValue="codigo" />
               </div>
               <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
                 <label>Título: </label>
-                <input
-                  [disabled]="modoVisualizacao"
-                  pInputText
-                  formControlName="titulo"
-                />
+                <input [disabled]="modoVisualizacao" pInputText formControlName="titulo" />
               </div>
               <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
                 <label>Solicitante: </label>
-                <input
-                  [disabled]="modoVisualizacao"
-                  pInputText
-                  type="text"
-                  formControlName="solicitante"
-                />
+                <input [disabled]="modoVisualizacao" pInputText type="text" formControlName="solicitante" />
               </div>
               <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
                 <label>Responsável: </label>
-                <input
-                  [readOnly]="true"
-                  variant="filled"
-                  pInputText
-                  type="text"
-                  formControlName="responsavel"
-                />
+                <input [readOnly]="true" variant="filled" pInputText type="text" formControlName="responsavel" />
               </div>
               <div class="field col-12" style="margin-bottom: 1rem">
                 <label>Descrição: </label>
-                <textarea
-                  pInputTextarea
-                  [autoResize]="true"
-                  formControlName="descricao"
-                  [disabled]="modoVisualizacao"
-                ></textarea>
+                <textarea pInputTextarea rows="15" [autoResize]="true" formControlName="descricao"
+                  [disabled]="modoVisualizacao"></textarea>
               </div>
             </div>
+            <p-dialog header="Adicionar Nota" [(visible)]="exibirDialogNota" [modal]="true" [closable]="false"
+              [style]="{ width: '400px' }">
+              <div [formGroupName]="'novaNota'">
+                <div class="field">
+                  <label for="nota">Nota:</label>
+                  <textarea id="nota" pInputTextarea formControlName="conteudo" rows="5" [autoResize]="true"
+                    placeholder="Digite sua nota aqui..."></textarea>
+                </div>
+              </div>
+              <div class="flex justify-content-end gap-2 mt-3 dialog-buttons">
+                <button pButton label="Cancelar" type="submit" class="p-button-outlined p-button-danger"
+                  (click)="fecharDialogNota()"></button>
+                <button pButton label="Confirmar" class="p-button-success" type="submit" (click)="confirmarNota()"></button>
+              </div>
+            </p-dialog>
+            <div class="field col-12 container-notas">
+              <label [style]="{'font-size':'18px', color:'black', 'margin-left':'40px'}">Notas:</label>
+              <ul [style]="{display: 'flex', 'flex-direction':'column',gap:'20px'}">
+                <li *ngFor="let nota of notas.controls; let i = index" [style]="{display: 'flex', 'flex-direction':'column','font-size':'14px', 'margin-bottom':'10px'}">
+                  <strong>{{ nota.value.autor }}:</strong> {{ nota.value.conteudo }}
+                </li>
+              </ul>
+            </div>
           </form>
-          <div class="mt-2">
+          <div class="mt-2 container-btns">
             <div class="flex flex-column md:flex-column gap-4">
-              <div
-                class="flex flex-row justify-content-left align-content-center align-itens-center m-1"
-              >
-                <p-button
-                  *ngIf="!modoVisualizacao"
-                  class="btns"
-                  type="submit"
-                  (onClick)="adicionarOuEditarChamado()"
-                  label="Confirmar"
-                ></p-button>
-                <p-button
-                  class="btns"
-                  type="submit"
-                  label="Cancelar"
-                  (onClick)="cancelarFormulario()"
-                  styleClass="red-button"
-                ></p-button>
+              <div class="flex flex-row justify-content-left align-content-center align-itens-center m-1">
+
+                <p-button *ngIf="newChamado" class="btns" type="submit" (onClick)="adicionarOuEditarChamado()"
+                  label="Salvar" severity="primary"></p-button>
+                <p-button *ngIf="isBotaoIniciarVisivel" class="btns" type="submit" label="Iniciar"
+                  (onClick)="iniciarChamado(chamado)" severity="info" raised="true"></p-button>
+                <p-button *ngIf="isBotaoFinalizarVisivel" class="btns" type="submit" label="Finalizar"
+                  (onClick)="finalizarChamado(chamado)" severity="success" raised="true"></p-button>
+                <p-button class="btns" type="submit" label="Adicionar Nota" (onClick)="abrirDialogNota(chamado)"
+                  severity="info" raised="true"></p-button>
+                <p-button class="btns" type="submit" label="Voltar" (onClick)="cancelarFormulario()" severity="danger"
+                  styleClass="red-button"></p-button>
+                <p-button *ngIf="isBotaoVoltarStatusVisivel" class="btns" type="submit" label="Voltar Status para NOVO"
+                  (onClick)="voltarStatus(chamado)" severity="warning"></p-button>
               </div>
             </div>
           </div>

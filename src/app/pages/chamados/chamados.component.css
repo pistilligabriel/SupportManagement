@@ -14,3 +14,52 @@
 .btns {
   margin: 0 10px;
 }
+
+
+.linha-cancelada{
+  background-color: rgb(204, 27, 27);
+  color:rgb(255, 255, 255)
+}
+
+.linha-em-andamento{
+  background-color: rgb(214, 203, 41);
+  color:rgb(0, 0, 0)
+}
+
+.linha-concluido{
+background-color: rgb(50, 187, 68);
+  color:rgb(0, 0, 0)
+}
+
+.icon-cancelado{
+  color:white
+}
+
+.field {
+  display: flex;
+  flex-direction: column; /* Garante que os elementos fiquem em coluna */
+  gap: 8px; /* Adiciona um espaçamento entre o label e a textarea */
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: flex-end; /* Alinha os botões à direita */
+  gap: 12px; /* Adiciona espaçamento entre os botões */
+  margin-top: 16px; /* Adiciona um espaçamento superior opcional */
+}
+
+#nota{
+  height: 30px;
+}
+
+.container-notas{
+  border:2px solid rgb(0,0,0,0.2);
+  padding-top: 8px;
+  border-radius: 8px;
+  background-color: rgb(167, 166, 166,0.2);
+  color: black;
+}
+
+.container-btns{
+  margin-top:15px
+}

@@ -26,7 +26,6 @@ export class LoginComponent {
     private formBuilder: FormBuilder,
     private loginService: LoginService,
     private messageService: MessageService,
-    private cookieService: CookieService,
     private router: Router,
   ) {
 
@@ -44,7 +43,7 @@ export class LoginComponent {
       .subscribe({
         next: (response) => {
           if (response) {
-            this.cookieService.set('token', response?.token);
+            sessionStorage.setItem('token', response.token)
             this.loginForm.reset();
             this.router.navigate(['/home']);
             this.messageService.add({
@@ -53,7 +52,7 @@ export class LoginComponent {
               detail: `Login realizado com sucesso!`,
               life: 2000,
             });
-            console.log(response);
+            console.log(response,response.token);
           }
         }, error: (err) => {
           this.messageService.add({
@@ -66,6 +65,8 @@ export class LoginComponent {
         }
       });
   }
+
+  
 
   ngOnDestroy(): void {
     this.destroy$.next();

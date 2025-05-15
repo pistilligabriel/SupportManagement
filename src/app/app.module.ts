@@ -8,10 +8,11 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {PrimengModule} from './libraries/primeng.module';
 import {BrowserAnimationsModule, provideAnimations} from '@angular/platform-browser/animations';
 import {CommonModule} from '@angular/common';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {CookieService} from "ngx-cookie-service";
 import {ConfirmationService, MessageService} from "primeng/api";
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,9 @@ import {ConfirmationService, MessageService} from "primeng/api";
     CookieService,
     MessageService,
     ConfirmationService,
-    {provide: LOCALE_ID, useValue: 'pt-BR'},],
+    {provide: LOCALE_ID, useValue: 'pt-BR'},
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}  
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -21,7 +21,7 @@ const routes: Routes = [
   {
    path: 'controle/geral',
    loadChildren:() => import('./pages/chamados/chamados.module').then(m => m.ChamadosModule)
-  }
+  },
 ];
 
 @NgModule({

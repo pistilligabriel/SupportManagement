@@ -1,6 +1,6 @@
 export enum Status {
-  NOVO = 'Novo',
-  EM_ANDAMENTO = 'Em andamento',
-  CONCLUIDO = 'Concluído',
-  CANCELADO = 'Cancelado',
+  NOVO = 'NOVO',
+  EM_ANDAMENTO = 'EM_ANDAMENTO',
+  CONCLUIDO = 'CONCLUIDO',
+  CANCELADO = 'CANCELADO',
 }

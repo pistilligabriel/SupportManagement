@@ -1,8 +1,9 @@
 import { Prioridade } from '../enums/Prioridade.enum';
 import {Setor} from "../enums/Setor.enum";
+import { Nota } from './Nota';
 
 export interface VisualizarChamado {
-  codigo: bigint;
+  codigo: number;
   titulo: string;
   setor: Setor;
   solicitante: string;
@@ -12,4 +13,6 @@ export interface VisualizarChamado {
   status: string;
   dataCriacao: string;
   dataConclusao: string;
+  isBotaoCancelar: boolean;
+  notas:Nota[]
 }
