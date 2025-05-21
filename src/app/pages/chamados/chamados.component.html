@@ -5,11 +5,12 @@
 
       <div *ngIf="!showForm" class="grid">
         <div class="col-12">
-          <p-table #tabelaChamados [columns]="colunasSelecionadas" [value]="chamadoData"
-            (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" selectionMode="single"
-            [rows]="5" [paginator]="true" [responsive]="true" [resizableColumns]="true" columnResizeMode="expand"
-            styleClass="p-datatable-gridlines" [tableStyle]="{ 'min-width': '50rem', width: '100%' }" [rowHover]="true"
-            [showCurrentPageReport]="true" [rowsPerPageOptions]="[5, 10, 25, 50, 100]" [globalFilterFields]="[
+          <p-table #tabelaChamados [multiSortMeta]="multiSort" [sortMode]="'multiple'" [columns]="colunasSelecionadas"
+            [value]="chamadoData" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+            selectionMode="single" [rows]="10" [paginator]="true" [responsive]="true" [resizableColumns]="true"
+            columnResizeMode="expand" styleClass="p-datatable-gridlines"
+            [tableStyle]="{ 'min-width': '50rem', width: '100%' }" [rowHover]="true" [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10,20,30,40,50]" [globalFilterFields]="[
               'codigo',
               'status',
               'titulo',
@@ -131,7 +132,7 @@
               </div>
               <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
                 <label>Solicitante: </label>
-                <input [disabled]="modoVisualizacao" pInputText type="text" formControlName="solicitante" />
+                <input [disabled]="modoVisualizacao" variant="filled" pInputText type="text" formControlName="solicitante" />
               </div>
               <div class="field col-12 md:col-6" style="margin-bottom: 1rem">
                 <label>Responsável: </label>
@@ -155,13 +156,15 @@
               <div class="flex justify-content-end gap-2 mt-3 dialog-buttons">
                 <button pButton label="Cancelar" type="submit" class="p-button-outlined p-button-danger"
                   (click)="fecharDialogNota()"></button>
-                <button pButton label="Confirmar" class="p-button-success" type="submit" (click)="confirmarNota()"></button>
+                <button pButton label="Confirmar" class="p-button-success" type="submit"
+                  (click)="confirmarNota()"></button>
               </div>
             </p-dialog>
             <div class="field col-12 container-notas">
               <label [style]="{'font-size':'18px', color:'black', 'margin-left':'40px'}">Notas:</label>
               <ul [style]="{display: 'flex', 'flex-direction':'column',gap:'20px'}">
-                <li *ngFor="let nota of notas.controls; let i = index" [style]="{display: 'flex', 'flex-direction':'column','font-size':'14px', 'margin-bottom':'10px'}">
+                <li *ngFor="let nota of notas.controls; let i = index"
+                  [style]="{display: 'flex', 'flex-direction':'column','font-size':'14px', 'margin-bottom':'10px'}">
                   <strong>{{ nota.value.autor }}:</strong> {{ nota.value.conteudo }}
                 </li>
               </ul>
@@ -177,7 +180,7 @@
                   (onClick)="iniciarChamado(chamado)" severity="info" raised="true"></p-button>
                 <p-button *ngIf="isBotaoFinalizarVisivel" class="btns" type="submit" label="Finalizar"
                   (onClick)="finalizarChamado(chamado)" severity="success" raised="true"></p-button>
-                <p-button class="btns" type="submit" label="Adicionar Nota" (onClick)="abrirDialogNota(chamado)"
+                <p-button *ngIf="chamado?.status === Status.NOVO || chamado?.status === Status.EM_ANDAMENTO" class="btns" type="submit" label="Adicionar Nota" (onClick)="abrirDialogNota(chamado)"
                   severity="info" raised="true"></p-button>
                 <p-button class="btns" type="submit" label="Voltar" (onClick)="cancelarFormulario()" severity="danger"
                   styleClass="red-button"></p-button>

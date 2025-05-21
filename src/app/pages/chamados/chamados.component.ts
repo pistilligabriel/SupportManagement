@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService, SortMeta } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { Subject, takeUntil } from 'rxjs';
+import { interval, Subject, take, takeUntil } from 'rxjs';
 import { Prioridade } from '../../model/enums/Prioridade.enum';
 import { Setor } from "../../model/enums/Setor.enum";
 import { Status } from '../../model/enums/Status.enum';
@@ -19,6 +19,7 @@ import { ChamadoService } from '../../services/chamado/chamado.service';
 import { Tipo } from '../../model/enums/Tipo.enum';
 import { UsuarioService } from '../../services/usuario/usuario.service';
 import { Nota } from '../../model/interfaces/Nota';
+import { EventosCompartilhadosService } from '../../services/eventos-compartilhados.service';
 
 @Component({
   selector: 'app-chamados',
@@ -43,6 +44,8 @@ export class ChamadosComponent implements OnInit, OnDestroy {
   chamado!: Chamado;
 
   chamadoData!: Chamado[];
+  
+  todosChamados: Chamado[] = [];
 
   chamadoSelecionado!: VisualizarChamado | null;
 
@@ -66,6 +69,10 @@ export class ChamadosComponent implements OnInit, OnDestroy {
 
   Tipo = Tipo;
   Status = Status;
+  multiSort: SortMeta[] = [
+    {field:'prioridade', order:1},
+    {field:'dataCriacao',order:1},
+  ]
 
 
   constructor(
@@ -73,7 +80,8 @@ export class ChamadosComponent implements OnInit, OnDestroy {
     private confirmationService: ConfirmationService,
     private chamadoService: ChamadoService,
     private messageService: MessageService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private eventos:EventosCompartilhadosService
   ) { }
 
   ngOnInit() {
@@ -110,9 +118,17 @@ export class ChamadosComponent implements OnInit, OnDestroy {
         console.log('Não foi possível obter usuario logado', err)
       }
     }
-    )
+  )
 
+  this.eventos.evento$.pipe(takeUntil(this.destroy$)).subscribe((evento) => {
+    if(evento === 'novoChamado'){
+      this.onAddButtonClick()
+    }
+  })
 
+  interval(3000).pipe(takeUntil(this.destroy$)).subscribe(() => {
+    this.listarChamados();
+  })
 
     console.log(this.setorOptions)
   }
@@ -231,11 +247,12 @@ export class ChamadosComponent implements OnInit, OnDestroy {
     this.isBotaoIniciarVisivel = false;
     this.isBotaoFinalizarVisivel = false;
     this.isBotaoVoltarStatusVisivel = false;
+    this.chamadoForms.get('solicitante')?.disable();
     console.log(this.showForm, this.newChamado, 'onAddBtnClick');
     this.chamadoForms.setValue({
       codigo: null,
       setor: null,
-      solicitante: null,
+      solicitante: this.usuario.nome,
       titulo: null,
       descricao: null,
       prioridade: null,
@@ -342,7 +359,16 @@ export class ChamadosComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response) {
-            this.chamadoData = response.map((chamado) => ({
+            this.todosChamados = response;
+            let chamadosFiltrados:Chamado[];
+            if (this.usuario?.tipo === Tipo.USUARIO) {
+            chamadosFiltrados = this.todosChamados.filter(
+              chamado => chamado.setor === this.usuario.setor // ou .id, conforme seu modelo
+            );
+          } else {
+            chamadosFiltrados = this.todosChamados;
+          }
+            this.chamadoData = chamadosFiltrados.map((chamado) => ({
               ...chamado,
               isBotaoIniciarVisivel: this.usuario?.tipo === Tipo.ADMIN && chamado?.status === Status.NOVO,
               isBotaoFinalizarVisivel: this.usuario?.tipo === Tipo.ADMIN && chamado?.status === Status.EM_ANDAMENTO,
@@ -369,7 +395,7 @@ export class ChamadosComponent implements OnInit, OnDestroy {
     const requestCreateChamado: CriarChamado = {
       setor: this.chamadoForms.value.setor as Setor,
       titulo: this.chamadoForms.value.titulo as string,
-      solicitante: this.chamadoForms.value.solicitante as string,
+      solicitante: this.usuario.nome,
       descricao: this.chamadoForms.value.descricao as string,
       prioridade: this.chamadoForms.value.prioridade as Prioridade,
       responsavel: this.chamadoForms.value.responsavel as string,
@@ -412,9 +438,10 @@ export class ChamadosComponent implements OnInit, OnDestroy {
   iniciarChamado(chamado: Chamado): void {
     // Atualiza o responsável e o status do chamado
     const chamadoAtualizado: Partial<Chamado> = {
-      responsavel: this.usuario.nome, // Define o usuário logado como responsável
+      responsavel: this.usuario?.nome, // Define o usuário logado como responsável
       status: Status.EM_ANDAMENTO, // Define o novo status
     };
+    console.log(this.chamadoSelecionado!.codigo, chamadoAtualizado)
 
     this.chamadoService.iniciarChamado(this.chamadoSelecionado!.codigo, chamadoAtualizado).subscribe({
       next: (response) => {
@@ -502,6 +529,17 @@ export class ChamadosComponent implements OnInit, OnDestroy {
     }
   }
 
+filtrarChamados() {
+    if (this.usuario?.tipo === Tipo.USUARIO) {
+      // Filtra apenas chamados do solicitante logado
+      this.chamadoData = this.todosChamados.filter(
+        chamado => chamado.setor === this.usuario.setor // ou .id, conforme seu modelo
+      );
+    } else {
+      // Admin ou outros tipos veem todos os chamados
+      this.chamadoData = this.todosChamados;
+    }
+  }
 
 
   exibirDialogNota: boolean = false; // Controla a visibilidade do diálogo

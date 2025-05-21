@@ -1,7 +1,11 @@
 import {CanActivateFn, Router, UrlTree} from '@angular/router';
 import {LoginService} from "../services/login/login.service";
 import {Observable} from "rxjs";
+import { Injectable } from '@angular/core';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthGuardService {
 
   constructor(private usuarioService: LoginService, private router: Router ) { }

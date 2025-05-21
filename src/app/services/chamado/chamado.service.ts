@@ -21,7 +21,6 @@ export class ChamadoService {
 
   constructor(
     private http: HttpClient,
-    private cookie: CookieService
   ) {}
 
   getAllChamados(): Observable<Array<Chamado>> {

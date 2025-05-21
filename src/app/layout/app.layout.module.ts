@@ -18,6 +18,7 @@ import { AppConfigModule } from './config/config.module';
 import { AppSidebarComponent } from "./app.sidebar.component";
 import { AppLayoutComponent } from "./app.layout.component";
 import { CommonModule } from '@angular/common';
+import { ChamadosComponent } from '../pages/chamados/chamados.component';
 
 @NgModule({
     declarations: [
@@ -27,6 +28,7 @@ import { CommonModule } from '@angular/common';
         AppMenuComponent,
         AppSidebarComponent,
         AppLayoutComponent,
+        
     ],
     imports: [
         CommonModule,
@@ -39,8 +41,9 @@ import { CommonModule } from '@angular/common';
         InputSwitchModule,
         RippleModule,
         RouterModule,
-        AppConfigModule
+        AppConfigModule,
     ],
-    exports: [AppLayoutComponent]
+    exports: [AppLayoutComponent],
+    providers:[ChamadosComponent]
 })
 export class AppLayoutModule { }

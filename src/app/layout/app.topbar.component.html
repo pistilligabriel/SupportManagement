@@ -1,7 +1,7 @@
 <div class="layout-topbar">
-    <a class="layout-topbar-logo" routerLink="">
-        <img src="assets/layout/images/{{layoutService.config().colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="logo">
-        <span>SuporteManagement</span>
+    <a class="layout-topbar-logo" [routerLink]="return">
+        <img [src]=logo alt="logo">
+        <span>{{nomeEmpresa}}</span>
     </a>
 
     <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
@@ -13,13 +13,13 @@
     </button>
 
     <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-        <button class="p-link layout-topbar-button">
+        <button (click)="newChamado()" class="p-link layout-topbar-button">
             <i class="pi pi-plus"></i>
             <span>Novo Chamado</span>
         </button>
-        <button class="p-link layout-topbar-button">
-            <i class="pi pi-book"></i>
-            <span>Base Conhecimento</span>
+        <button *ngIf="usuario?.tipo=== tipo.ADMIN" class="p-link layout-topbar-button" (click)="config()">
+            <i class="pi pi-cog"></i>
+            <span>Configurações</span>
         </button>
         <button class="p-link layout-topbar-button" (click)="logout()">
             <i class="pi pi-sign-out"></i>

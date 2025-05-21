@@ -22,6 +22,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ListboxModule } from 'primeng/listbox';
 import { InputMaskModule } from 'primeng/inputmask';
 import { DialogModule } from 'primeng/dialog';
+import { ChartModule } from 'primeng/chart';
+import { FileUploadModule } from 'primeng/fileupload';
 
 @NgModule({
   declarations: [],
@@ -48,7 +50,9 @@ import { DialogModule } from 'primeng/dialog';
     InputTextareaModule,
     ListboxModule,
     InputMaskModule,
-    DialogModule
+    DialogModule,
+    ChartModule,
+    FileUploadModule
   ],
   exports: [
     BadgeModule,
@@ -73,7 +77,9 @@ import { DialogModule } from 'primeng/dialog';
     InputTextareaModule,
     ListboxModule,
     InputMaskModule,
-    DialogModule
+    DialogModule,
+    ChartModule,
+    FileUploadModule
   ],
 })
 export class PrimengModule {}

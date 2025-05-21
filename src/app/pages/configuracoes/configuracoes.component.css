@@ -1,0 +1,31 @@
+.field {
+  margin-bottom: 2rem;
+}
+
+label {
+  margin-bottom: 0.5rem;
+  display: block;
+  font-weight: 500;
+}
+
+.p-fileupload {
+  margin-bottom: 1rem;
+}
+
+.mt-3 {
+  margin-top: 1rem !important;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-content-end {
+  justify-content: flex-end;
+}
+
+button[pButton] {
+  min-width: 220px;
+  font-weight: bold;
+  font-size: 1rem;
+}

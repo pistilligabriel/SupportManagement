@@ -1,7 +1,10 @@
-<div class="grid" [style]="{ height: '88vh', 'margin-top': '70px' }">
+<div class="grid" [style]="{ height: '11vh', 'margin-top': '70px' }">
   <div class="col-12">
-    <p-card header="Home" styleClass="shadow-3 m-5 text-indigo">
-
+    <p-card header="Dashboard" styleClass="shadow-3 m-5 text-indigo">
+      <div class="card">
+        <h5><strong>Relação de chamados atendidos pelo CPD</strong></h5>
+        <p-chart type="bar" [data]="data" [options]="options" width="auto" height="500px"/>
+      </div>
     </p-card>
   </div>
 </div>
